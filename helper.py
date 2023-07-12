@@ -29,7 +29,6 @@ def plot_graph(adjacent_matrix, center_coords, p, states, colors=None):
     for y, row in enumerate(adjacent_matrix):
         for index in row:
             if index >= len(adjacent_matrix):
-                print(f"Skip: {y} -> {index}")
                 continue
             graph.add_edge(y, index)
     nx.draw_networkx(graph, pos=nx.get_node_attributes(graph, 'pos'),
