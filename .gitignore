@@ -152,7 +152,7 @@ cython_debug/
 #.idea/
 *.zip
 /data
-/quenching_data
+/quencing_data
 /quencing_data_corrected
 *.npy
 mc_sampling*
