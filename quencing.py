@@ -14,18 +14,9 @@ beta_stop = 10
 p, q, n = 3, 11, 14
 
 model = HyperbolicIsingModel(p, q, n, beta=beta_start)
-# model.plot()
 print(f"Using model of length {len(model)}")
-
 j = model.j
-
-es = np.linspace(-5 * model.j, 5 * model.j, 10, True)# [51:41:-1]  # DEBUG: testing for boundary [4:]
-# print(es)
-# es = np.linspace(-8.57649672e-01, 1.97568366e+00, 100, True)
-# es = [0.15]  # -0.8, -0.05, 0.05, 0.1, 0.15
-# es = np.linspace(-30*j, 10*j, 100, True)  # dividable by 5
-# es = np.linspace(-1.5, 1.5, 100, True)  # dividable by 5
-# print(f"Energies: {es}")
+es = np.linspace(-5 * model.j, 5 * model.j, 100, True)
 
 for e in es:
 
@@ -60,19 +51,11 @@ for e in es:
     # model.plot()
     # for finite size measurement
     if model.reaches_boundary():
-        print(f"BOUNDARY REACHED FOR {e}")
-        # model.plot()
-        continue
+        print(f"Boundary reached for {e}")
     else:
-        print(f"BOUNDARY NOT!!!! REACHED FOR {e}")
-        # model.plot()
-        continue
+        print(f"Boundary NOT reached for {e}")
 
-    #model.plot(ignore_last_n_layers=4, title=e)
-    #exit("FORCE EXIT HERE <<<<<")
-
-    # path = f"C:/Users/yanic/Documents/GitHub/IsingModelQuantumGrav/IsingModelQuantumGrav/quencing_data/quencing_data_{beta_start}_{beta_stop}_{p}_{q}_{n}"
-    path = f"C:/Users/yanic/Documents/GitHub/IsingModelQuantumGrav/IsingModelQuantumGrav/quencing_data/quencing_data_{beta_start}_{beta_stop}_{p}_{q}_{n}_close"
+    path = f"data/quencing_data_{beta_start}_{beta_stop}_{p}_{q}_{n}_close"
     if not os.path.isdir(path):
         os.mkdir(path)
     f_name = f"{path}/e={e}"

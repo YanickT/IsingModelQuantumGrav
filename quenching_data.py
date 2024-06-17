@@ -3,13 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-path1 = "C:/Users/yanic/Documents/GitHub/IsingModelQuantumGrav/IsingModelQuantumGrav/quencing_data/quencing_data_0_20_3_11_12/"
-path2 = "C:/Users/yanic/Documents/GitHub/IsingModelQuantumGrav/IsingModelQuantumGrav/quencing_data/quencing_data_0_10_3_11_12/"
-path3 = "C:/Users/yanic/Documents/GitHub/IsingModelQuantumGrav/IsingModelQuantumGrav/quencing_data/quencing_data_0_10_3_7_14_close/"
-path4 = "C:/Users/yanic/Documents/GitHub/IsingModelQuantumGrav/IsingModelQuantumGrav/quencing_data/quencing_data_0_20_3_11_12/"
-path5 = "C:/Users/yanic/Documents/GitHub/IsingModelQuantumGrav/IsingModelQuantumGrav/quencing_data/quencing_data_0_20_3_11_12_long/"
-paths = [path3] #, path2]
-# paths = [path4] #, path2]
+#path = "quencing_data/quencing_data_0_10_3_7_14/"
+path = "quencing_data/quencing_data_0_20_3_11_12/"
+paths = [path]
 
 
 def get_data(path):
