@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-#path = "quencing_data/quencing_data_0_10_3_7_14/"
+#path = "quencing_data/quencing_data_0_10_3_7_14_close/"
 path = "quencing_data/quencing_data_0_20_3_11_12/"
 paths = [path]
 
