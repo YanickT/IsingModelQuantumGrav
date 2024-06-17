@@ -10,7 +10,7 @@ def plot_graph(adjacent_matrix, center_coords, p, states, colors=None):
     fig_ax[1].set_ylim(-1, 1)
     fig_ax[1].set_box_aspect(1)
     if colors is None:
-        colors = ["#000000", "#FF0000AA", "#0000FFAA"]
+        colors = ["#000000", "#FF0000", "#0000FF"]
     graph = nx.Graph()
     for y in range(len(adjacent_matrix)):
         if y >= center_coords.shape[0]:
@@ -30,6 +30,11 @@ def plot_graph(adjacent_matrix, center_coords, p, states, colors=None):
         for index in row:
             if index >= len(adjacent_matrix):
                 continue
+
             graph.add_edge(y, index)
-    nx.draw_networkx(graph, pos=nx.get_node_attributes(graph, 'pos'),
-                     node_color=list(nx.get_node_attributes(graph, 'node_color').values()))
+
+    sizes = [100] * len(list(nx.get_node_attributes(graph, 'pos')))
+    colors = list(nx.get_node_attributes(graph, 'node_color').values())
+    # colors[0] = "green"
+    poses = nx.get_node_attributes(graph, 'pos')
+    nx.draw_networkx(graph, pos=poses, node_color=colors, with_labels=False, node_size=sizes)

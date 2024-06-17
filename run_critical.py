@@ -14,53 +14,47 @@ MC samples: 1000
 Updates dazwischen: 100_000
 """
 
-"""
-Plot die eh schon da sind
-Plot mit negativer Kopplung
-Kurze Logic-Zusammenfassung für den Code
-
-"""
-
 
 beta = 1
-# model = HyperbolicIsingModel(3, 7, 7, beta=1)
 model = HyperbolicIsingModel(3, 7, 12, beta=1)
+# model = HyperbolicIsingModel(3, 7, 12, beta=1)
 # model = HyperbolicIsingModel(3, 7, 12, beta=1)
 j = model.j
 print(f"Total length: {len(model)}")
 # model.plot("Initialization", ignore_last_n_layers=3)
 model.update(1)  # jit compile stuff
+model.plot()
 
 
-# betas = [1, 10, 20, 30, 40, 50]  # beta = 1000 nochmal einsetzen
-betas = [1000]
-# betas = [1000]
-es = np.linspace(-10*j, 0, 11)
+betas = [5.5, 2.3, 1.45, 1.05, 0.8, 0.67, 0.57, 0.49, 0.43, 0.39, 0.35]
+betas = [np.linspace(beta, 5 * beta, 20) for beta in betas]
+print(betas)
+es = [-j * i for i in range(11)]
 print(es)
-#es = [0]
+e_betas = list(zip(es, betas))
 
 
 # some of the parameters
-thermalization_time = 100_000_000
-mc_samples = 1000
-mc_updates = 100_000
+thermalization_time = 1_000_000
+mc_updates = 100_000_000
 
-
-for beta in betas:
-    model.set_beta(beta)
-    for e in es:
+for e, (betas) in e_betas:
+    model.set_e(e)
+    for beta in betas:
+        model.set_beta(beta)
         model.rest()
-        model.set_e(e)
+
         energies = [model.energy()]
         boundary_lengths = [model.boundary_length()]
         states = [model.get_states()]
 
         # thermalization
         print(f"Beta = {beta}; E = {e}: Start thermalization", end="")
+        # model.plot(ignore_last_n_layers=model.dn - 1)
         t1 = time.time()
         model.update(thermalization_time)
         t2 = time.time()
-        model.plot(ignore_last_n_layers=model.dn - 1)
+        # model.plot(ignore_last_n_layers=model.dn - 1)
         states.append(model.get_states())
 
         # MC sampling

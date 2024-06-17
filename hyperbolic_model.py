@@ -8,9 +8,7 @@ from helper import plot_graph
 random.seed(100)
 
 
-# FIXME: 0 should be changeable
-
-@nb.njit(cache=True)
+@nb.njit()
 def boundary_length_fast(states, update_spins):
     sum_ = 0
     for spin in update_spins:
@@ -19,7 +17,7 @@ def boundary_length_fast(states, update_spins):
     return sum_
 
 
-@nb.njit(cache=True)
+@nb.njit()
 def accept_spinflip_fast(states, update_spin, nbr_relations, h, je, beta, loop_array, q1):
     """
 
@@ -64,7 +62,7 @@ def accept_spinflip_fast(states, update_spin, nbr_relations, h, je, beta, loop_a
     return energy_delta < 0 or random.random() < np.exp(- beta * energy_delta)
 
 
-@nb.jit(nopython=True, cache=True)
+@nb.njit()
 def update_fast(states, nbr_relations, update_spins, n, h, je, beta, llsi, loop_array, q):
     for i in range(n):
         # print(update_spins)
@@ -212,12 +210,14 @@ class HyperbolicIsingModel:
     def get_states(self):
         return self.states[:self.dn_lsi]
 
-    def plot(self, title="", ignore_last_n_layers=0):
+    def plot(self, title="", ignore_last_n_layers=0, save=None):
         # for plotting
         lengths = self.graph._sector_lengths_cumulated[- (ignore_last_n_layers + 1)]
         plot_graph(self.graph.get_nbrs_list()[:lengths], self.graph.center_coords[:lengths], self.p,
                    self.states[:lengths])
         plt.title(title)
+        if not (save is None):
+            plt.savefig(save)
         plt.show()
 
     def energy(self):
@@ -227,8 +227,8 @@ class HyperbolicIsingModel:
             for nbr in self.nbr_array[node_index]:
                 if nbr >= self.dn_lsi:
                     continue
-                if self.states[nbr] == self.states[node_index]:
-                    energy -= self.je
+                if self.states[nbr] != self.states[node_index]:
+                    energy += self.je
         return energy
 
     def boundary_length(self):
@@ -243,11 +243,16 @@ class HyperbolicIsingModel:
         self.states[self.llsi:] = -1
 
         # create array for updatable spins
-        self.update_spins = list(range(self.graph._sector_lengths_cumulated[- self.dn - 2], self.llsi))
+        self.update_spins = nb.typed.List(list(range(self.graph._sector_lengths_cumulated[- self.dn - 2], self.llsi)))
+        # self.update_spins = list(range(self.graph._sector_lengths_cumulated[- self.dn - 2], self.llsi))
 
     def update(self, n):
         update_fast(self.states, self.nbrs_relations, self.update_spins, n, self.h, self.je, self.beta, self.llsi,
                     self.loop_array, self.q - 1)
+
+    def reaches_boundary(self):
+        # print(self.graph._sector_lengths_cumulated[self.llsi])
+        return (np.max(self.states[self.graph._sector_lengths_cumulated[- self.dn - 2]: self.llsi]) == 1)
 
 
 if __name__ == "__main__":
@@ -258,10 +263,10 @@ if __name__ == "__main__":
     model.plot("Initialization", ignore_last_n_layers=3)
 
     # some of the parameters
-    model.update(1)
-    e = model.j
-    model.rest()
-    model.set_e(e)
+    #model.update(1)
+    #e = model.j
+    #model.rest()
+    #model.set_e(e)
 
     t1 = time.time()
     model.update(1_000_000)
