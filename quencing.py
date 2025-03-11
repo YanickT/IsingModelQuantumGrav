@@ -66,7 +66,7 @@ for e in es:
     else:
         print(f"Boundary NOT reached for {e}")
 
-    path = f"quencing_data/quencing_data_{beta_start}_{beta_stop}_{p}_{q}_{n}_random_start_more_time"
+    path = f"quencing_data/quencing_data_{beta_start}_{beta_stop}_{p}_{q}_{n}"
     if not os.path.isdir(path):
         os.mkdir(path)
     f_name = f"{path}/e={e}"
