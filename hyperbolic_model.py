@@ -218,9 +218,13 @@ class HyperbolicIsingModel:
         plt.title(title)
         if not (save is None):
             plt.savefig(save)
+
+        plt.xlim((-1.1, 1.1))
+        plt.ylim((-1.1, 1.1))
         plt.show()
 
     def energy(self):
+        # 1 - self.epsilon should equal gamma  # TODO
         energy = - (self.gamma + 1 - self.epsilon) - self.h * np.sum(self.states + 1) / 2
         # print("MIT ODER OHNE BOUNDARY? MOMENTAN OHNE")
         for node_index in range(self.dn_lsi):
@@ -258,9 +262,11 @@ class HyperbolicIsingModel:
 if __name__ == "__main__":
     import time
 
-    model = HyperbolicIsingModel(3, 7, 7, beta=5)
+    model = HyperbolicIsingModel(3, 11, 12, beta=20, e=0.1694)
     print(f"Total length: {len(model)}")
+    print(model.energy())
     model.plot("Initialization", ignore_last_n_layers=3)
+
 
     # some of the parameters
     #model.update(1)

@@ -8,24 +8,33 @@ import pickle
 
 # some of the parameters
 thermalization_time = 1_000_000
-mc_updates = 10_000 # 100_000_000
+mc_updates = 100_000
 beta_start = 0
 beta_stop = 10
-p, q, n = 3, 11, 14
+p, q, n = 3, 7, 14
 
 model = HyperbolicIsingModel(p, q, n, beta=beta_start)
+model.plot()
 print(f"Using model of length {len(model)}")
 j = model.j
-es = np.linspace(-5 * model.j, 5 * model.j, 100, True)
+es = np.linspace(-model.j, model.j, 20, True)[0:5]
 
 for e in es:
 
     delta_beta = (beta_stop - beta_start) / mc_updates
     beta = beta_start
+    model.set_beta(beta)
 
     # prepare model
     model.set_e(e)
     model.rest()
+
+    # go into a random state
+    model.set_beta(0)
+    model.update(1_000_000)
+
+    # reset beta to real start value
+    model.set_beta(beta)
 
     print(f"Start with energy e = {e} with delta_beta = {delta_beta}:")
 
@@ -39,6 +48,7 @@ for e in es:
     boundary_lengths = [model.boundary_length()]
     betas = [beta]
     for i in range(mc_updates):
+        print(f"\r\t{i} / {mc_updates}", end="")
         model.update(len(model))
         betas.append(beta)
         energies.append(model.energy())
@@ -46,6 +56,7 @@ for e in es:
 
         beta += delta_beta
         model.set_beta(beta)
+    print("\n")
     print(f"\tMeasurement took {time.time() - t2} s")
 
     # model.plot()
@@ -55,7 +66,7 @@ for e in es:
     else:
         print(f"Boundary NOT reached for {e}")
 
-    path = f"data/quencing_data_{beta_start}_{beta_stop}_{p}_{q}_{n}_close"
+    path = f"quencing_data/quencing_data_{beta_start}_{beta_stop}_{p}_{q}_{n}_random_start_more_time"
     if not os.path.isdir(path):
         os.mkdir(path)
     f_name = f"{path}/e={e}"
